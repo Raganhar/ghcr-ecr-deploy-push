@@ -1,0 +1,3 @@
+name: DockerWebAPI.Pulumi
+runtime: dotnet
+description: A minimal AWS C# Pulumi program
