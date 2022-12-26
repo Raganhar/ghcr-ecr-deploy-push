@@ -7,9 +7,16 @@
 # To get a newer version, you will need to update the SHA.
 # You can also reference a tag or branch, but the action may change without warning.
 
-name: Deploy to Amazon ECS
+name: auto deploy
 
-on: workflow_dispatch
+on: 
+  create:
+    tags:
+      - '*'
+  workflow_dispatch:
+  # push:
+  #   tags:
+  #     - '*'
 
 env:
   AWS_REGION: eu-central-1                   # set this to your preferred AWS region, e.g. us-west-1
@@ -35,7 +42,7 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: |
           echo "$GITHUB_CONTEXT"
-          
+        
       - name: "Find tag to release"
         env:
           IS_TAG_CONTEXT: ${{ github.ref_type == 'tag' }}
@@ -43,13 +50,19 @@ jobs:
           if ${IS_TAG_CONTEXT}; then
             TAG="${{github.ref_name}}"
           else
-            echo "Only possible to release tags"
-            exit 1
-            TAG="${GITHUB_REF##*/}"
+            git fetch --prune --unshallow
+            TAG=$(git describe --tag --abbrev=0)
           fi
-
           echo "TAG=${TAG}" >> $GITHUB_ENV
 
+      - name: container tag
+        run: echo newly set env variable ${{env.TAG}}
+
+      - name: Set env
+        run: echo "GITHUB_SHA_SHORT=$(echo $GITHUB_SHA | cut -c 1-6)" >> $GITHUB_ENV
+      - name: Test
+        run: echo $GITHUB_SHA_SHORT
+        
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@13d241b293754004c80624b5567555c4a39ffbe3
         with:
