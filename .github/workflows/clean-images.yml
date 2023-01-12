@@ -23,7 +23,7 @@ jobs:
           uses: snok/container-retention-policy@v1
           with:
             image-names: ghcr-ecr-deploy-push
-            cut-off: 19 days ago
+            cut-off: 19 days ago UTC
             account-type: personal
             keep-at-least: 4
             token: ${{ secrets.MY_PAT }}
