@@ -26,5 +26,5 @@ jobs:
             image-names: ghcr-ecr-deploy-push
             cut-off: 1 days ago UTC
             account-type: personal
-            keep-at-least: 4
+            keep-at-least: 1
             token: ${{ secrets.MY_PAT }}
