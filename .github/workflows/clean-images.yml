@@ -10,6 +10,7 @@
 name: Clean images
 
 on: 
+  push:
   workflow_dispatch:
   # schedule:
   #   - cron: "0 0 1 * *"  # every day at midnight
@@ -20,9 +21,9 @@ jobs:
       runs-on: ubuntu-latest
       steps:
         - name: delete containers
-          uses: snok/container-retention-policy@v1.5.1
+          uses: snok/container-retention-policy@v1.4.2
           with:
-            image-names: raganhar/ghcr-ecr-deploy-push*
+            image-names: ghcr-ecr-deploy-push*
             cut-off: 19 days ago UTC
             account-type: personal
             keep-at-least: 4
