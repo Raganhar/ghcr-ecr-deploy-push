@@ -21,9 +21,9 @@ jobs:
       runs-on: ubuntu-latest
       steps:
         - name: delete containers
-          uses: snok/container-retention-policy@v1.4.2
+          uses: snok/container-retention-policy@v1.5.1
           with:
-            image-names: ghcr-ecr-deploy-push
+            image-names: ghcr-ecr-deploy-push*
             cut-off: 19 days ago UTC
             account-type: personal
             keep-at-least: 4
