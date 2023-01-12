@@ -22,7 +22,7 @@ jobs:
         - name: delete containers
           uses: snok/container-retention-policy@v1.5.1
           with:
-            image-names: ghcr-ecr-deploy-push*
+            image-names: raganhar/ghcr-ecr-deploy-push*
             cut-off: 19 days ago UTC
             account-type: personal
             keep-at-least: 4
