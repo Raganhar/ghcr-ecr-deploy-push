@@ -5,44 +5,6 @@ on:
   - push
 
 jobs:
-  # generate_version:
-  #   runs-on: ubuntu-latest
-  #   outputs:
-  #     version: ${{ steps.generated-version.outputs.VERSION }}
-  #     branchName: ${{ steps.gitversion.outputs.branchName }}
-  #   steps:
-  #   - name: Checkout the repository
-  #     uses: actions/checkout@v2
-  #     with:
-  #       fetch-depth: 0
-
-  #   - name: Install GitVersion
-  #     uses: gittools/actions/gitversion/setup@v0.9.7
-  #     with:
-  #       versionSpec: '5.8.1'
-    
-  #   - name: Determine Version 
-  #     id:   gitversion
-  #     uses: gittools/actions/gitversion/execute@v0.9.7
-    
-  #   - name: Display GitVersion outputs
-  #     id: generated-version
-  #     run: |
-  #       echo "::set-output name=VERSION::${{ steps.gitversion.outputs.semVer }}.$GITHUB_RUN_NUMBER-${{ steps.gitversion.outputs.shortSha }}"
-    
-  #   - name: Validate the GitVersion
-  #     id: validate-version
-  #     shell: pwsh
-  #     run: |
-  #       if ("${{ steps.gitversion.outputs.branchName }}" -like 'release/*') {
-  #         echo "::set-output name=VERSION::${{ steps.generated-version.outputs.VERSION }}"
-  #       }
-  #       else {
-  #         $version = "${{ steps.generated-version.outputs.VERSION }}" -replace '-beta', ''
-  #         echo "::set-output name=VERSION::$version" 
-  #       }
-
-
   build_docker_image:
     runs-on: ubuntu-latest
     # needs: "generate_version"
@@ -60,7 +22,7 @@ jobs:
     - name: Branch name
       run: echo running on branch ${GITHUB_REF##*/}
 
-   - name: "Get branch name and save to env"
+    - name: "Get branch name and save to env"
       env:
         IS_PR: ${{ github.event_name == 'pull_request'}}
       run: |
