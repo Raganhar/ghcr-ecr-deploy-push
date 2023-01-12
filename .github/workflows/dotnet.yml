@@ -60,17 +60,26 @@ jobs:
     - name: Branch name
       run: echo running on branch ${GITHUB_REF##*/}
 
-    - name: "Get branch name and save to env"
+   - name: "Get branch name and save to env"
       env:
-        IS_PR: ${{ github.EVENT_NAME == 'pull_request' }}
+        IS_PR: ${{ github.event_name == 'pull_request'}}
       run: |
+        
         if ${IS_PR}; then
-          BASE_TAG="${GITHUB_HEAD_REF}"
+          BRANCH="${GITHUB_HEAD_REF}"
+          BASE_TAG="${BRANCH##*/}"
         else
-          BASE_TAG="${GITHUB_REF##*/}"
+          BRANCH="${GITHUB_REF_NAME}"
+          BASE_TAG="${BRANCH##*/}"
         fi
 
-        echo "BASE_TAG=${BASE_TAG}" >> $GITHUB_ENV
+        echo "BRANCH=${BRANCH}" >> $GITHUB_ENV 
+        echo "BASE_TAG=${BASE_TAG}" >> $GITHUB_ENV 
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+          token: ${{ secrets.MY_PAT }}
+          fetch-depth: 0
 
     - name: Set Tag Name
       id: artifact_version
@@ -89,6 +98,11 @@ jobs:
       uses: ASzc/change-string-case-action@v2
       with:
         string: ${{ github.event.repository.name }}
+
+    - id: "lower_owner"
+      uses: ASzc/change-string-case-action@v2
+      with:
+        string: ${{ github.repository_owner }}
 
     - name: Authenticate with the Github Container Registry 🔐
       run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u USERNAME --password-stdin
